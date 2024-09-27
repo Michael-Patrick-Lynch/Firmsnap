@@ -1,0 +1,17 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+    {% if post_obj %}
+        <u>{{post_obj.post_title}}</u>
+        <blockquote>{{post_obj.post_text}}</blockquote>
+
+        <p>Comments:</p>
+        <ul>
+            {% for comment in list_of_comments %}
+                <blockquote>{{ comment.comment_text }}</blockquote>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Post not found</p>
+    {% endif %}
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+    <h2>Trending posts:</h2>
+
+    {% if list_of_posts %}
+        <ul>
+            {% for post in list_of_posts %}
+                <li><a href="{% url 'post_detail' post.id %}">{{ post.post_title }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No posts found for this organization.</p>
+    {% endif %}
+{% endblock %}
+
