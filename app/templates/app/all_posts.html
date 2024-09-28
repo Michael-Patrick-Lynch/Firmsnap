@@ -6,11 +6,32 @@
     {% if list_of_posts %}
         <ul>
             {% for post in list_of_posts %}
-                <li><a href="{% url 'post_detail' post.id %}">{{ post.post_title }}</a></li>
+            <div><a href="{% url 'post_detail' post.id %}">{{ post.post_title }}</a></div>
             {% endfor %}
         </ul>
+        <form action="/submit" method="POST">
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" required>
+          
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+          
+            <label for="message">Message</label>
+            <textarea id="message" name="message" required></textarea>
+          
+            <button type="submit">Submit</button>
+          </form>
     {% else %}
         <p>No posts found for this organization.</p>
     {% endif %}
 {% endblock %}
 
+
+{% comment %} 
+<div class="container py-4">
+  <h1 class="mb-4">Bootstrap with Sensible Defaults</h1>
+  <p class="lead">This is a simple example of using Bootstrap with minimal styling, focusing on utility classes and clean layout.</p>
+  
+  <button class="btn btn-primary">Bootstrap Button</button>
+</div>
+ {% endcomment %}
