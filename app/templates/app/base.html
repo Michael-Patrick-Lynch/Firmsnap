@@ -1,31 +1,33 @@
 {% load static tailwind_tags %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="coffee">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>{% block title %}Firmsnap{% endblock %}</title>
     {% tailwind_css %}
 </head>
-<body class="bg-gray-50 font-serif leading-normal tracking-normal">
-    <header>
-        <h1>Firmsnap</h1>
-        <nav>
-            <ul>
+<body class="font-serif leading-normal tracking-normal">
+    <header class="navbar bg-base-100">
+        <div class="flex-1">
+            <a class="btn btn-ghost normal-case text-xl">Firmsnap</a>
+        </div>
+        <div class="flex-none">
+            <ul class="menu menu-horizontal px-1">
                 <li><a href="/">All posts</a></li>
                 <li><a href="/about/">Communities</a></li>
             </ul>
-        </nav>
+        </div>
     </header>
 
-    <main>
+    <main class="p-4">
         {% block content %}
         {% endblock %}
     </main>
 
-    <footer>
+    <footer class="footer p-10 bg-base-200 text-base-content">
         <p>Made with ❤️ in Dublin</p>
     </footer>
 </body>
 </html>
+

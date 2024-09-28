@@ -42,22 +42,20 @@ module.exports = {
         // '../../**/*.py'
     ],
     theme: {
-        extend: {
-          colors: {
-            background: '#1a202c', // Dark gray
-            text: '#f7fafc',       // Off-white
-            // Customize other colors as needed
-          },
-        },
-      },
+        extend: {},
+    },
     plugins: [
         /**
          * '@tailwindcss/forms' is the forms plugin that provides a minimal styling
          * for forms. If you don't like it or have own styling for forms,
          * comment the line below to disable '@tailwindcss/forms'.
          */
+        require('daisyui'),
         require('@tailwindcss/forms'),
         require('@tailwindcss/typography'),
         require('@tailwindcss/aspect-ratio'),
     ],
+    daisyui: {
+        themes: ["coffee"],
+      },
 }
