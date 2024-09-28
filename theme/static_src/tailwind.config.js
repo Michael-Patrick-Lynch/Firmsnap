@@ -56,6 +56,6 @@ module.exports = {
         require('@tailwindcss/aspect-ratio'),
     ],
     daisyui: {
-        themes: ["coffee"],
+        themes: ["valentine"],
       },
 }

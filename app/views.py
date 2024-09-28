@@ -3,14 +3,12 @@ from django.template import loader
 from .models import Post, Comment
 from django.shortcuts import get_object_or_404
 
-
-
 def index(request):
     return HttpResponse("Hello, world. You're at the app index.")
 
 def post_detail(request, post_id):
     post_obj = get_object_or_404(Post, id=post_id)
-    list_of_comments = Comment.objects.all()
+    list_of_comments = Comment.objects.filter(post_id=post_id)
     template = loader.get_template("app/post_detail.html")
     context = {"post_obj" : post_obj, "list_of_comments": list_of_comments}
     return HttpResponse(template.render(context, request))

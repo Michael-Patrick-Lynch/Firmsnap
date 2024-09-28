@@ -4,34 +4,43 @@
     <h2>Trending posts:</h2>
 
     {% if list_of_posts %}
-        <ul>
-            {% for post in list_of_posts %}
-            <div><a href="{% url 'post_detail' post.id %}">{{ post.post_title }}</a></div>
-            {% endfor %}
-        </ul>
-        <form action="/submit" method="POST">
-            <label for="name">Name</label>
-            <input type="text" id="name" name="name" required>
-          
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
-          
-            <label for="message">Message</label>
-            <textarea id="message" name="message" required></textarea>
-          
-            <button type="submit">Submit</button>
-          </form>
+        {% for post in list_of_posts %}
+    
+            <div class="card w-full bg-base-100 shadow-md mb-4">
+                <div class="card-body">
+                <div class="flex items-center mb-2">
+                    <div class="avatar">
+                    <div class="w-8 h-8 rounded-full">
+                        <img src="https://i.pravatar.cc/150?img=3" alt="User Avatar" />
+                    </div>
+                    </div>
+                    <span class="ml-2 text-sm text-gray-500">{{ post.user_id.user_name }} • {{ post.pub_date}}</span>
+                </div>
+                <h2 class="card-title">
+                    <a href="{% url 'post_detail' post.id %}">{{ post.post_title }}</a>
+                </h2>
+                <div class="card-actions justify-between mt-4">
+                    <div>
+                    </div>
+                    <div class="flex space-x-2">
+                    <button class="btn btn-xs btn-ghost text-gray-500 hover:text-green-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11h-2v4h2V7zm0 6h-2v2h2v-2z" />
+                        </svg>
+                        123
+                    </button>
+                    <button class="btn btn-xs btn-ghost text-gray-500 hover:text-red-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-7H9v4h2v-4zm0-2H9V5h2v4z" />
+                        </svg>
+                        45
+                    </button>
+                    </div>
+                </div>
+                </div>
+            </div>
+          {% endfor %}
     {% else %}
         <p>No posts found for this organization.</p>
     {% endif %}
 {% endblock %}
-
-
-{% comment %} 
-<div class="container py-4">
-  <h1 class="mb-4">Bootstrap with Sensible Defaults</h1>
-  <p class="lead">This is a simple example of using Bootstrap with minimal styling, focusing on utility classes and clean layout.</p>
-  
-  <button class="btn btn-primary">Bootstrap Button</button>
-</div>
- {% endcomment %}
