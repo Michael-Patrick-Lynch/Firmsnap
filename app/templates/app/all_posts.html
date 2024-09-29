@@ -6,39 +6,32 @@
     {% if list_of_posts %}
         {% for post in list_of_posts %}
     
-            <div class="card w-full bg-base-100 shadow-md mb-4">
-                <div class="card-body">
+        <div class="card w-full bg-base-100 shadow-md mb-4">
+            <div class="card-body">
                 <div class="flex items-center mb-2">
                     <div class="avatar">
-                    <div class="w-8 h-8 rounded-full">
-                        <img src="https://i.pravatar.cc/150?img=3" alt="User Avatar" />
+                        <div class="w-8 h-8 rounded-full">
+                            <img src="https://i.pravatar.cc/150?img=3" alt="User Avatar" />
+                        </div>
                     </div>
-                    </div>
-                    <span class="ml-2 text-sm text-gray-500">{{ post.user_id.user_name }} • {{ post.pub_date}}</span>
+                    <span class="ml-2 text-sm text-gray-500">{{ post.user_id.user_name }} • {{ post.pub_date }}</span>
                 </div>
                 <h2 class="card-title">
                     <a href="{% url 'post_detail' post.id %}">{{ post.post_title }}</a>
                 </h2>
-                <div class="card-actions justify-between mt-4">
-                    <div>
-                    </div>
+        
+                <div class="card-actions mt-4">
                     <div class="flex space-x-2">
-                    <button class="btn btn-xs btn-ghost text-gray-500 hover:text-green-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11h-2v4h2V7zm0 6h-2v2h2v-2z" />
-                        </svg>
-                        123
-                    </button>
-                    <button class="btn btn-xs btn-ghost text-gray-500 hover:text-red-500">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" fill="currentColor" viewBox="0 0 20 20">
-                        <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-7H9v4h2v-4zm0-2H9V5h2v4z" />
-                        </svg>
-                        45
-                    </button>
+                        <button class="btn btn-ghost text-gray-500 hover:text-green-500 flex items-center space-x-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 inline" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2l-6 6h4v6h4v-6h4z"/>
+                            </svg>
+                            <span class="text-xl font-bold">{{ post.votes }}</span>
+                        </button>
                     </div>
-                </div>
                 </div>
             </div>
+        </div>
           {% endfor %}
     {% else %}
         <p>No posts found for this organization.</p>
