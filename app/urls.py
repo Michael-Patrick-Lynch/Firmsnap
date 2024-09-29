@@ -9,6 +9,7 @@ urlpatterns = [
     # Ex: /app/post/1
     path("post/<int:post_id>", views.post_detail, name="post_detail"),
 
-    # Ex: /app/all/1
-    path("all/<int:organisation_id>", views.all_posts, name="all_posts"),
+    # Ex: /app/all
+    # Shows all the posts for the org of the user making the requests
+    path("all", views.all_posts, name="all_posts"),
 ]
