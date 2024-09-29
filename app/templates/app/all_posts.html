@@ -14,7 +14,7 @@
                             <img src="https://i.pravatar.cc/150?img=3" alt="User Avatar" />
                         </div>
                     </div>
-                    <span class="ml-2 text-sm text-gray-500">{{ post.user_id.user_name }} • {{ post.pub_date }}</span>
+                    <span class="ml-2 text-sm text-gray-500">{{ post.user_id.username }} • {{ post.pub_date }}</span>
                 </div>
                 <h2 class="card-title">
                     <a href="{% url 'post_detail' post.id %}">{{ post.post_title }}</a>

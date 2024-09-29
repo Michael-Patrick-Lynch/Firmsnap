@@ -12,7 +12,7 @@
                             <img src="https://i.pravatar.cc/150?img=3" alt="User Avatar" />
                         </div>
                     </div>
-                    <span class="ml-2 text-sm text-gray-500">{{ post_obj.user_id.user_name }} • {{ post_obj.pub_date }}</span>
+                    <span class="ml-2 text-sm text-gray-500">{{ post_obj.user_id.username }} • {{ post_obj.pub_date }}</span>
                 </div>
                 <h2 class="card-title">
                     {{ post_obj.post_title }}
@@ -44,7 +44,7 @@
                             <img src="https://i.pravatar.cc/150?img=3" alt="User Avatar" />
                         </div>
                     </div>
-                    <span class="ml-2 text-sm text-gray-500">{{ comment.user_id.user_name }} • {{ comment.pub_date }}</span>
+                    <span class="ml-2 text-sm text-gray-500">{{ comment.user_id.username }} • {{ comment.pub_date }}</span>
                 </div>
                 <h2 class="card-title">
                     {{ comment.comment_text }}

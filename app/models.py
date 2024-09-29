@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 class Organisation(models.Model):
     org_name = models.CharField(max_length=200)
@@ -6,12 +7,11 @@ class Organisation(models.Model):
     def __str__(self):
         return self.org_name
 
-class User(models.Model):
-    organisation_id = models.ForeignKey(Organisation, on_delete=models.CASCADE)
-    user_name = models.CharField(max_length=200)
+class User(AbstractUser):
+    organisation_id = models.ForeignKey(Organisation, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
-        return self.user_name
+        return self.username
 
 class Post(models.Model):
     organisation_id = models.ForeignKey(Organisation, on_delete=models.CASCADE)
