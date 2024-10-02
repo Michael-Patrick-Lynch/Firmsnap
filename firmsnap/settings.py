@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-=%nhr=*^*_6c45(ii4s12qh+i^objs4^3&uvp#(&5_r1!8%e3w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['django-firmsnap-env-prod.eba-smmuqrvt.eu-west-1.elasticbeanstalk.com', '127.0.0.1']
 
 
 # Application definition
@@ -121,7 +121,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "theme/static/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -129,5 +129,6 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 TAILWIND_APP_NAME = 'theme'
+TAILWIND_CSS_PATH = 'css/dist/styles.css'	# Tells Django where to find the CSS file when in prod
 
 AUTH_USER_MODEL = 'app.User'
