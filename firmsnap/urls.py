@@ -15,11 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.shortcuts import redirect
 from django.urls import include, path
-from django.contrib.auth import views as auth_views
 from app.views import CustomLoginView
 
 urlpatterns = [
+    path('', lambda request: redirect('all_posts', permanent=True)),  # Redirect root URL to 'all_posts' URL pattern
     path("app/", include("app.urls")),
     path("admin/", admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")), # django_tailwind
@@ -39,5 +40,5 @@ urlpatterns = [
     # accounts/reset/done/ [name='password_reset_complete']
     path("accounts/", include("django.contrib.auth.urls")),
 
-    
+
 ]
