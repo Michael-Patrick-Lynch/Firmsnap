@@ -1,6 +1,8 @@
 import logging
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
+
+from app.forms import PostCreationForm
 from .models import Post, Comment
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.views import LoginView
@@ -33,6 +35,26 @@ def all_posts(request):
         return render(request, "app/all_posts.html", {"list_of_posts": list_of_posts})
     else:
         return redirect('login')
+
+def post_creation(request):
+    # If we hit this view with a POST request, we try
+    # to create a new post based on the form input
+    if request.method == "POST":
+        form = PostCreationForm(request.POST)
+        if form.is_valid():
+            new_post = form.save(commit=False)
+
+            # Fill in the fields of the new post with context from the request
+            new_post.user_id = request.user
+            new_post.organisation_id = request.user.organisation_id
+            new_post.save()
+
+            return HttpResponseRedirect("/") # This should direct us to view the created post
+    else:
+        # If we hit this view with a GET request, we return the form
+        form = PostCreationForm()
+
+    return render(request, "app/post_creation.html", {"form": form})
 
 # This is needed so that users are directed to the feed for
 # their org as soon as they log in

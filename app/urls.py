@@ -12,4 +12,6 @@ urlpatterns = [
     # Ex: /app/all
     # Shows all the posts for the org of the user making the requests
     path("all", views.all_posts, name="all_posts"),
+
+    path("post/create", views.post_creation, name="create_post")
 ]
