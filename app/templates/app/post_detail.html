@@ -64,6 +64,13 @@
         </div>
     {% endfor %}
     </div>
+
+    {% comment %} Comment Box {% endcomment %}
+    <form action="{% url 'post_detail' post_id%}" method="post">
+        {% csrf_token %}
+        {{ comment_form }}
+        <input type="submit" value="Submit">
+    </form>
     {% else %}
         <p>Post not found</p>
     {% endif %}
