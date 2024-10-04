@@ -1,4 +1,4 @@
-# Firmsnap Enterprise Wiki
+# Firmsnap Enterprise Forum
 
 ## Deployment details
  - Run `$ python manage.py tailwind built` to use django-tailwind to build the styles.css inside theme/static/css/dist
