@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import platform
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,8 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-=%nhr=*^*_6c45(ii4s12qh+i^objs4^3&uvp#(&5_r1!8%e3w"
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Debug is only turned on when I'm on my Mac
+DEBUG = platform.system() == 'Darwin'
 
 ALLOWED_HOSTS = ['django-firmsnap-env-prod.eba-smmuqrvt.eu-west-1.elasticbeanstalk.com', '127.0.0.1', '.firmsnap.com']
 

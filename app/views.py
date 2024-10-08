@@ -68,7 +68,7 @@ def post_creation(request):
             new_post.organisation_id = request.user.organisation_id
             new_post.save()
 
-            return HttpResponseRedirect("/") # This should direct us to view the created post
+            return HttpResponseRedirect(f"/app/post/{new_post.id}")
     else:
         # If we hit this view with a GET request, we return the form
         form = PostCreationForm()
@@ -125,3 +125,14 @@ class CustomLoginView(LoginView):
             redirect_url = reverse('all_posts')
             return redirect_url
         return super().get_redirect_url()
+    
+def custom_error_view(request, status_code=500, message=None):
+    return render(
+        request,
+        "app/error.html",
+        context={
+            'status_code': status_code,
+            'message': message if message else 'An unexpected error occurred.'
+        },
+        status=status_code
+    )

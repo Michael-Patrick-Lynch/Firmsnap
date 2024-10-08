@@ -17,7 +17,8 @@ Including another URLconf
 from django.contrib import admin
 from django.shortcuts import redirect
 from django.urls import include, path
-from app.views import CustomLoginView
+from app.views import CustomLoginView, custom_error_view
+
 
 urlpatterns = [
     path('', lambda request: redirect('all_posts', permanent=True)),  # Redirect root URL to 'all_posts' URL pattern
@@ -39,6 +40,21 @@ urlpatterns = [
     # accounts/reset/<uidb64>/<token>/ [name='password_reset_confirm']
     # accounts/reset/done/ [name='password_reset_complete']
     path("accounts/", include("django.contrib.auth.urls")),
-
-
 ]
+
+def handler404(request, exception):
+    return custom_error_view(request, status_code=404, message='Page Not Found')
+
+def handler500(request):
+    return custom_error_view(request, status_code=500, message='Internal Server Error')
+
+def handler403(request, exception):
+    return custom_error_view(request, status_code=403, message='Access Denied')
+
+def handler400(request, exception):
+    return custom_error_view(request, status_code=400, message='Bad Request')
+
+handler400 = handler400
+handler403 = handler403
+handler404 = handler404
+handler500 = handler500
