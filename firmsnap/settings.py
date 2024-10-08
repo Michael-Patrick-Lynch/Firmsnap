@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-=%nhr=*^*_6c45(ii4s12qh+i^objs4^3&uvp#(&5_r1!8%e3w
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['django-firmsnap-env-prod.eba-smmuqrvt.eu-west-1.elasticbeanstalk.com', '127.0.0.1', 'www.firmsnap.com', 'firmsnap.com']
+ALLOWED_HOSTS = ['django-firmsnap-env-prod.eba-smmuqrvt.eu-west-1.elasticbeanstalk.com', '127.0.0.1', '.firmsnap.com']
 
 
 # Application definition
