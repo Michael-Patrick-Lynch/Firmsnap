@@ -1,5 +1,10 @@
-import logging
-from django.http import HttpResponse, HttpResponseRedirect
+import json
+from .models import Organisation
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.db import DatabaseError
+from django.core.exceptions import ValidationError
 from django.template import loader
 
 from app.forms import PostCreationForm, CommentCreationForm
@@ -7,6 +12,8 @@ from .models import Post, Comment
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.views import LoginView
 from django.urls import reverse
+
+SHARED_SECRET = '3982hfseair2398'   # Shared between Django and Nextjs apps
 
 def index(request):
     return redirect('all_posts')
@@ -67,6 +74,45 @@ def post_creation(request):
         form = PostCreationForm()
 
     return render(request, "app/post_creation.html", {"form": form})
+
+@csrf_exempt
+@require_POST
+def new_org(request):
+    auth_header = request.headers.get('Authorization')
+    if not auth_header or auth_header != f"Bearer {SHARED_SECRET}":
+        return JsonResponse({'error': 'Unauthorized'}, status=401)
+
+    try:
+        if request.content_type == 'application/x-www-form-urlencoded':
+            data = request.POST
+        else:
+            data = json.loads(request.body)
+
+        org_name = data.get('org_name')
+        if not org_name:
+            return JsonResponse({'error': 'org_name is required'}, status=400)
+
+        # Create and save the new organization
+        new_org = Organisation(org_name=org_name)
+        new_org.full_clean()  # Validate model fields before saving
+        new_org.save()
+
+        return JsonResponse({'message': 'Organisation created successfully', 'id': new_org.id}, status=201)
+    
+    except ValidationError as e:
+        return JsonResponse({'error': 'Validation error', 'details': e.message_dict}, status=400)
+
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+
+    except Exception:
+        return JsonResponse({'error': 'An internal server error occurred'}, status=500)
+    
+    except DatabaseError:
+        return JsonResponse({'error': 'Database error. Please try again later.'}, status=500)
+    
+    except Exception:
+        return JsonResponse({'error': 'An unexpected internal server error occurred'}, status=500)
 
 # This is needed so that users are directed to the feed for
 # their org as soon as they log in
