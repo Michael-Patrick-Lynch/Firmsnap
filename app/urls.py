@@ -18,4 +18,6 @@ urlpatterns = [
     # The endpoint used during onboarding to create a new org after the
     # Stripe payement is recieved
     path("new_org", views.new_org, name="new_org"),
+
+    path("admin", views.org_admin_panel, name="org_admin_panel")
 ]

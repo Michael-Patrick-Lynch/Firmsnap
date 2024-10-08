@@ -19,6 +19,14 @@
                     <li><a href="/">All posts</a></li>
                     <li><a href="/about/">Communities</a></li>
                     <li><a href="post/create">Create post</a></li>
+
+                    <li>
+                      <form id="logout-form" action="{% url 'logout' %}" method="POST" style="display: inline;">
+                          {% csrf_token %}
+                          <a href="#" onclick="document.getElementById('logout-form').submit(); return false;">Logout</a>
+                      </form>
+                    </li>
+
                 </ul>
             </div>
         

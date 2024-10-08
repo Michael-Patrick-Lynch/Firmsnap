@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.db import DatabaseError
 from django.core.exceptions import ValidationError
 from django.template import loader
-
+from django.contrib.auth.decorators import login_required
 from app.forms import PostCreationForm, CommentCreationForm
 from .models import Post, Comment
 from django.shortcuts import get_object_or_404, redirect, render
@@ -74,6 +74,25 @@ def post_creation(request):
         form = PostCreationForm()
 
     return render(request, "app/post_creation.html", {"form": form})
+
+@login_required
+def org_admin_panel(request):
+    user = request.user
+
+    if user.is_org_admin:
+        organisation = user.organisation_id
+        return render(request, "app/org_admin.html", {"organisation": organisation})
+    else:
+        return render(
+            request,
+            "app/error.html",
+            context={
+                'status_code': 'Access denied',
+                'message': 'This page is for your org admin only'
+            },
+            status=None
+        )
+
 
 @csrf_exempt
 @require_POST
