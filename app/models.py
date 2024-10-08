@@ -3,12 +3,15 @@ from django.contrib.auth.models import AbstractUser
 
 class Organisation(models.Model):
     org_name = models.CharField(max_length=200)
+    seats_remaining = models.IntegerField() # Based on their current subscription
 
     def __str__(self):
         return self.org_name
 
 class User(AbstractUser):
     organisation_id = models.ForeignKey(Organisation, on_delete=models.CASCADE, null=True, blank=True)
+    is_org_admin = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return self.username
