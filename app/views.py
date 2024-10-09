@@ -11,7 +11,8 @@ from app.forms import PostCreationForm, CommentCreationForm
 from .models import Post, Comment
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.views import LoginView
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
+from django.views.generic import DeleteView
 
 SHARED_SECRET = '3982hfseair2398'   # Shared between Django and Nextjs apps
 
@@ -28,8 +29,9 @@ def post_detail(request, post_id):
             comment_form = CommentCreationForm(request.POST)
             if comment_form.is_valid():
                 new_comment = comment_form.save(commit=False)
-                new_comment.user_id = request.user
+                new_comment.user_id = user
                 new_comment.post_id = Post.objects.get(pk=post_id)
+                new_comment.organisation_id = user.organisation_id
 
                 new_comment.save()
                 return redirect('post_detail', post_id=post_id)
@@ -102,7 +104,7 @@ def org_admin_panel(request):
 def org_admin_all_users(request):
     user = request.user
     if user.is_org_admin:
-        return render(request, "app/org_admin_all_users.html", {"all_users": User.objects.get(organisation_id = user.organisation_id)})
+        return render(request, "app/org_admin_all_users.html", {"all_users": User.objects.filter(organisation_id = user.organisation_id)})
     else:
         return admin_access_only_template() 
 
@@ -110,7 +112,7 @@ def org_admin_all_users(request):
 def org_admin_all_posts(request):
     user = request.user
     if user.is_org_admin:
-        return render(request, "app/org_admin_all_posts.html", {"all_posts" : Post.objects.get(organisation_id = user.organisation_id)})
+        return render(request, "app/org_admin_all_posts.html", {"all_posts" : Post.objects.filter(organisation_id = user.organisation_id)})
     else:
         return admin_access_only_template()
 
@@ -118,7 +120,9 @@ def org_admin_all_posts(request):
 def org_admin_all_comments(request):
     user = request.user
     if user.is_org_admin:
-        return render(request, "app/org_admin_all_comments.html", {"all_comments" : Comment.get(orga)})
+        return render(request, "app/org_admin_all_comments.html", {"all_comments" : Comment.objects.filter(organisation_id = user.organisation_id)})
+    else:
+        return admin_access_only_template()
 
 def admin_access_only_template(request):
     return render(
@@ -130,6 +134,11 @@ def admin_access_only_template(request):
             },
             status=None
         )
+
+class AdminDeleteComment(DeleteView):
+    template_name = 'app/admin_comment_delete_confirmation.html'
+    model = Comment
+    success_url = reverse_lazy('org_admin_all_comments')
 
 @csrf_exempt
 @require_POST

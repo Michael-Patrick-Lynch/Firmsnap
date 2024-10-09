@@ -23,4 +23,6 @@ urlpatterns = [
     path("admin/all_users", views.org_admin_all_users, name="org_admin_all_users"),
     path("admin/all_posts", views.org_admin_all_posts, name="org_admin_all_posts"),
     path("admin/all_comments", views.org_admin_all_comments, name="org_admin_all_comments"),
+
+    path('admin/delete_comment/<int:pk>/', views.AdminDeleteComment.as_view(), name='admin_delete_comment'),
 ]

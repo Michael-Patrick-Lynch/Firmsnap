@@ -1,5 +1,16 @@
 {% extends 'app/base.html' %}
 
 {% block content %}
-<h1>Error: {{ status_code }}. {{ message }} </h1>
+    {% if all_comments %}
+        <ul>
+        {% for comment in all_comments %}
+            <li>
+                {{ comment }}
+                <a href="{% url 'admin_delete_comment' comment.id %}">Delete</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No comments in your org yet</p>
+    {% endif %}
 {% endblock %}
