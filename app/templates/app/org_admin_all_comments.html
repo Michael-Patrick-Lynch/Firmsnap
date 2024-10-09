@@ -2,15 +2,20 @@
 
 {% block content %}
     {% if all_comments %}
-        <ul>
+        <ul class="space-y-4">
         {% for comment in all_comments %}
-            <li>
-                {{ comment }}
-                <a href="{% url 'admin_delete_comment' comment.id %}">Delete</a>
+            <li class="bg-white shadow-sm rounded-lg p-4 flex justify-between items-center">
+                <div class="flex-1">
+                    <p class="text-gray-800">{{ comment }}</p>
+                </div>
+                <a href="{% url 'admin_delete_comment' comment.id %}" 
+                   class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-red-600 transition duration-200 ease-in-out">
+                    Delete
+                </a>
             </li>
         {% endfor %}
         </ul>
     {% else %}
-        <p>No comments in your org yet</p>
+        <p class="text-gray-500">No comments in your org yet</p>
     {% endif %}
 {% endblock %}
