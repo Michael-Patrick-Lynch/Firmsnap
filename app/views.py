@@ -1,5 +1,5 @@
 import json
-from .models import Organisation
+from .models import Organisation, User
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -75,15 +75,53 @@ def post_creation(request):
 
     return render(request, "app/post_creation.html", {"form": form})
 
+# # Just an abstraction to keep the code more DRY
+# @login_required
+# def org_admin_page(request, admin_template: str):
+#     user = request.user
+
+#     if user.is_org_admin:
+#         organisation = user.organisation_id
+#         return render(request, admin_template, {"organisation": organisation})
+#     else:
+#         return render(
+#             request,
+#             "app/error.html",
+#             context={
+#                 'status_code': 'Access denied',
+#                 'message': 'This page is for your org admin only'
+#             },
+#             status=None
+#         )
+    
 @login_required
 def org_admin_panel(request):
-    user = request.user
+    return render(request, "app/org_admin_central.html")
 
+@login_required
+def org_admin_all_users(request):
+    user = request.user
     if user.is_org_admin:
-        organisation = user.organisation_id
-        return render(request, "app/org_admin.html", {"organisation": organisation})
+        return render(request, "app/org_admin_all_users.html", {"all_users": User.objects.get(organisation_id = user.organisation_id)})
     else:
-        return render(
+        return admin_access_only_template() 
+
+@login_required
+def org_admin_all_posts(request):
+    user = request.user
+    if user.is_org_admin:
+        return render(request, "app/org_admin_all_posts.html", {"all_posts" : Post.objects.get(organisation_id = user.organisation_id)})
+    else:
+        return admin_access_only_template()
+
+@login_required
+def org_admin_all_comments(request):
+    user = request.user
+    if user.is_org_admin:
+        return render(request, "app/org_admin_all_comments.html", {"all_comments" : Comment.get(orga)})
+
+def admin_access_only_template(request):
+    return render(
             request,
             "app/error.html",
             context={
@@ -92,7 +130,6 @@ def org_admin_panel(request):
             },
             status=None
         )
-
 
 @csrf_exempt
 @require_POST

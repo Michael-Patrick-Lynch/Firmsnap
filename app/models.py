@@ -30,6 +30,7 @@ class Post(models.Model):
 class Comment(models.Model):
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     post_id = models.ForeignKey(Post, on_delete=models.CASCADE)
+    organisation_id = models.ForeignKey(Organisation, on_delete=models.CASCADE)
     
     comment_text = models.TextField(max_length=2000)
     pub_date = models.DateTimeField(auto_now_add=True)

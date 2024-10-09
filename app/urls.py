@@ -19,5 +19,8 @@ urlpatterns = [
     # Stripe payement is recieved
     path("new_org", views.new_org, name="new_org"),
 
-    path("admin", views.org_admin_panel, name="org_admin_panel")
+    path("admin", views.org_admin_panel, name="org_admin_panel"),
+    path("admin/all_users", views.org_admin_all_users, name="org_admin_all_users"),
+    path("admin/all_posts", views.org_admin_all_posts, name="org_admin_all_posts"),
+    path("admin/all_comments", views.org_admin_all_comments, name="org_admin_all_comments"),
 ]

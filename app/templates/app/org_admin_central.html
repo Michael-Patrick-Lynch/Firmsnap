@@ -1,0 +1,11 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+
+<ul class="menu menu-horizontal px-1">
+    <li><a href="{% url 'org_admin_all_users' %}">Add or deactivate users</a></li>
+    <li><a href="{% url 'org_admin_all_posts' %}">Remove posts</a></li>
+    <li><a href="{% url 'org_admin_all_comments' %}">Remove comments</a></li>
+</ul>
+
+{% endblock %}

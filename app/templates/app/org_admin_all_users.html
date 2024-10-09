@@ -1,0 +1,10 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+{% if organisation %}
+        {% for user in User.objects.get(organisation_id=organisation.id) %}
+            {{ user }}
+{% else %}
+    <p>No users in your org yet.</p>
+{% endif %}
+{% endblock %}
