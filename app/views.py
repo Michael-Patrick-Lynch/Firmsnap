@@ -14,10 +14,12 @@ from django.contrib.auth.views import LoginView
 from django.urls import reverse, reverse_lazy
 from django.views.generic import DeleteView
 
-SHARED_SECRET = '3982hfseair2398'   # Shared between Django and Nextjs apps
+SHARED_SECRET = "3982hfseair2398"  # Shared between Django and Nextjs apps
+
 
 def index(request):
-    return redirect('all_posts')
+    return redirect("all_posts")
+
 
 def post_detail(request, post_id):
     user = request.user
@@ -25,7 +27,7 @@ def post_detail(request, post_id):
 
     # You can only view posts from your own organisation
     if user.is_authenticated and user.organisation_id == post_obj.organisation_id:
-        if request.method == 'POST':
+        if request.method == "POST":
             comment_form = CommentCreationForm(request.POST)
             if comment_form.is_valid():
                 new_comment = comment_form.save(commit=False)
@@ -34,16 +36,21 @@ def post_detail(request, post_id):
                 new_comment.organisation_id = user.organisation_id
 
                 new_comment.save()
-                return redirect('post_detail', post_id=post_id)
+                return redirect("post_detail", post_id=post_id)
         else:
             comment_form = CommentCreationForm()
 
         list_of_comments = Comment.objects.filter(post_id=post_id)
         template = loader.get_template("app/post_detail.html")
-        context = {"post_obj" : post_obj, "list_of_comments": list_of_comments,'comment_form': comment_form, 'post_id':post_id}
+        context = {
+            "post_obj": post_obj,
+            "list_of_comments": list_of_comments,
+            "comment_form": comment_form,
+            "post_id": post_id,
+        }
         return HttpResponse(template.render(context, request))
     else:
-        return redirect('login')
+        return redirect("login")
 
 
 # All posts from the users organisation
@@ -55,7 +62,8 @@ def all_posts(request):
         list_of_posts = Post.objects.filter(organisation_id=organisation_id)
         return render(request, "app/all_posts.html", {"list_of_posts": list_of_posts})
     else:
-        return redirect('login')
+        return redirect("login")
+
 
 def post_creation(request):
     # If we hit this view with a POST request, we try
@@ -77,107 +85,121 @@ def post_creation(request):
 
     return render(request, "app/post_creation.html", {"form": form})
 
-# # Just an abstraction to keep the code more DRY
-# @login_required
-# def org_admin_page(request, admin_template: str):
-#     user = request.user
 
-#     if user.is_org_admin:
-#         organisation = user.organisation_id
-#         return render(request, admin_template, {"organisation": organisation})
-#     else:
-#         return render(
-#             request,
-#             "app/error.html",
-#             context={
-#                 'status_code': 'Access denied',
-#                 'message': 'This page is for your org admin only'
-#             },
-#             status=None
-#         )
-    
 @login_required
 def org_admin_panel(request):
     return render(request, "app/org_admin_central.html")
+
 
 @login_required
 def org_admin_all_users(request):
     user = request.user
     if user.is_org_admin:
-        return render(request, "app/org_admin_all_users.html", {"all_users": User.objects.filter(organisation_id = user.organisation_id)})
+        return render(
+            request,
+            "app/org_admin_all_users.html",
+            {"all_users": User.objects.filter(organisation_id=user.organisation_id)},
+        )
     else:
-        return admin_access_only_template() 
+        return admin_access_only_template()
+
 
 @login_required
 def org_admin_all_posts(request):
     user = request.user
     if user.is_org_admin:
-        return render(request, "app/org_admin_all_posts.html", {"all_posts" : Post.objects.filter(organisation_id = user.organisation_id)})
+        return render(
+            request,
+            "app/org_admin_all_posts.html",
+            {"all_posts": Post.objects.filter(organisation_id=user.organisation_id)},
+        )
     else:
         return admin_access_only_template()
+
 
 @login_required
 def org_admin_all_comments(request):
     user = request.user
     if user.is_org_admin:
-        return render(request, "app/org_admin_all_comments.html", {"all_comments" : Comment.objects.filter(organisation_id = user.organisation_id)})
+        return render(
+            request,
+            "app/org_admin_all_comments.html",
+            {
+                "all_comments": Comment.objects.filter(
+                    organisation_id=user.organisation_id
+                )
+            },
+        )
     else:
         return admin_access_only_template()
 
+
 def admin_access_only_template(request):
     return render(
-            request,
-            "app/error.html",
-            context={
-                'status_code': 'Access denied',
-                'message': 'This page is for your org admin only'
-            },
-            status=None
-        )
+        request,
+        "app/error.html",
+        context={
+            "status_code": "Access denied",
+            "message": "This page is for your org admin only",
+        },
+        status=None,
+    )
+
 
 class AdminDeleteComment(DeleteView):
-    template_name = 'app/admin_comment_delete_confirmation.html'
+    template_name = "app/admin_comment_delete_confirmation.html"
     model = Comment
-    success_url = reverse_lazy('org_admin_all_comments')
+    success_url = reverse_lazy("org_admin_all_comments")
+
 
 @csrf_exempt
 @require_POST
 def new_org(request):
-    auth_header = request.headers.get('Authorization')
+    auth_header = request.headers.get("Authorization")
     if not auth_header or auth_header != f"Bearer {SHARED_SECRET}":
-        return JsonResponse({'error': 'Unauthorized'}, status=401)
+        return JsonResponse({"error": "Unauthorized"}, status=401)
 
     try:
-        if request.content_type == 'application/x-www-form-urlencoded':
+        if request.content_type == "application/x-www-form-urlencoded":
             data = request.POST
         else:
             data = json.loads(request.body)
 
-        org_name = data.get('org_name')
+        org_name = data.get("org_name")
         if not org_name:
-            return JsonResponse({'error': 'org_name is required'}, status=400)
+            return JsonResponse({"error": "org_name is required"}, status=400)
 
         # Create and save the new organization
         new_org = Organisation(org_name=org_name)
         new_org.full_clean()  # Validate model fields before saving
         new_org.save()
 
-        return JsonResponse({'message': 'Organisation created successfully', 'id': new_org.id}, status=201)
-    
+        return JsonResponse(
+            {"message": "Organisation created successfully", "id": new_org.id},
+            status=201,
+        )
+
     except ValidationError as e:
-        return JsonResponse({'error': 'Validation error', 'details': e.message_dict}, status=400)
+        return JsonResponse(
+            {"error": "Validation error", "details": e.message_dict}, status=400
+        )
 
     except json.JSONDecodeError:
-        return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+        return JsonResponse({"error": "Invalid JSON format"}, status=400)
 
     except Exception:
-        return JsonResponse({'error': 'An internal server error occurred'}, status=500)
-    
+        return JsonResponse({"error": "An internal server error occurred"}, status=500)
+
     except DatabaseError:
-        return JsonResponse({'error': 'Database error. Please try again later.'}, status=500)
-    
+        return JsonResponse(
+            {"error": "Database error. Please try again later."}, status=500
+        )
+
     except Exception:
-        return JsonResponse({'error': 'An unexpected internal server error occurred'}, status=500)
+        return JsonResponse(
+            {"error": "An unexpected internal server error occurred"}, status=500
+        )
+
 
 # This is needed so that users are directed to the feed for
 # their org as soon as they log in
@@ -187,17 +209,18 @@ class CustomLoginView(LoginView):
 
         # If the login is not working, it could be because the user has no org id!!
         if user.is_authenticated and user.organisation_id:
-            redirect_url = reverse('all_posts')
+            redirect_url = reverse("all_posts")
             return redirect_url
         return super().get_redirect_url()
-    
+
+
 def custom_error_view(request, status_code=500, message=None):
     return render(
         request,
         "app/error.html",
         context={
-            'status_code': status_code,
-            'message': message if message else 'An unexpected error occurred.'
+            "status_code": status_code,
+            "message": message if message else "An unexpected error occurred.",
         },
-        status=status_code
+        status=status_code,
     )
