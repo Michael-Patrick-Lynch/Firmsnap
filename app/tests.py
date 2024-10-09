@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from app.views import SHARED_SECRET
-from .models import Organisation
+from .models import Organisation, User
 
 
 class NewOrgEndpointTests(TestCase):
@@ -18,7 +18,12 @@ class NewOrgEndpointTests(TestCase):
         """Test creating a new organisation successfully"""
         response = self.client.post(
             self.url,
-            data={"org_name": "Microsoft"},
+            data={
+                "org_name": "Microsoft",
+                "admin_username": "JohnSmith",
+                "admin_password": "iAmJohnSmithFromMicrosoft",
+                "seats_paid_for": 100,
+            },
             content_type="application/json",
             **self.headers,
         )
@@ -27,16 +32,45 @@ class NewOrgEndpointTests(TestCase):
         self.assertEqual(
             response.json()["message"], "Organisation created successfully"
         )
-        self.assertTrue(Organisation.objects.filter(org_name="Microsoft").exists())
+        new_org = Organisation.objects.get(org_name="Microsoft")
+        new_admin = User.objects.get(username="JohnSmith")
 
-    def test_missing_org_name(self):
-        """Test that a missing org_name returns a 400 error"""
+        self.assertIsNotNone(new_org)
+        self.assertIsNotNone(new_admin)
+
+        self.assertTrue(new_org.seats_paid_for == 100)
+        self.assertTrue(new_admin.password == "iAmJohnSmithFromMicrosoft")
+
+    def test_with_a_single_missing_field(self):
+        """Test that a single missing field will return a 400 error"""
+        response = self.client.post(
+            self.url,
+            data={
+                "org_name": "Microsoft",
+                "admin_username": "JohnSmith",
+                "admin_password": "iAmJohnSmithFromMicrosoft",
+            },
+            content_type="application/json",
+            **self.headers,
+        )
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.json()["error"], "seats_paid_for is required")
+        self.assertTrue(
+            Organisation.objects.filter(org_name="Microsoft").exists() == False
+        )
+
+    def test_missing_fields(self):
+        """Test that missing fields returns a 400 error"""
         response = self.client.post(
             self.url, data={}, content_type="application/json", **self.headers
         )
 
         self.assertEqual(response.status_code, 400)
-        self.assertIn("org_name is required", response.json()["error"])
+        self.assertIn(
+            "org_name, admin_username, admin_password, seats_paid_for is required",
+            response.json()["error"],
+        )
 
     def test_invalid_json_format(self):
         """Test that invalid JSON format returns a 400 error"""

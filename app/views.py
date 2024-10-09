@@ -165,14 +165,43 @@ def new_org(request):
         else:
             data = json.loads(request.body)
 
-        org_name = data.get("org_name")
-        if not org_name:
-            return JsonResponse({"error": "org_name is required"}, status=400)
+        # Required fields
+        required_fields = [
+            "org_name",
+            "admin_username",
+            "admin_password",
+            "seats_paid_for",
+        ]
+        missing_fields = [field for field in required_fields if field not in data]
 
-        # Create and save the new organization
-        new_org = Organisation(org_name=org_name)
-        new_org.full_clean()  # Validate model fields before saving
+        if missing_fields:
+            return JsonResponse(
+                {"error": f"{', '.join(missing_fields)} is required"}, status=400
+            )
+
+        org_name = data.get("org_name")
+        admin_username = data.get("admin_username")
+        admin_password = data.get("admin_password")
+        seats_paid_for = data.get("seats_paid_for")
+
+        new_org = Organisation(
+            org_name=org_name,
+            seats_paid_for=seats_paid_for,
+            seats_remaining=seats_paid_for - 1, # Since we are adding the admin user
+        )
+        new_admin = User(
+            is_org_admin=True,
+            organisation_id=new_org.id,
+            username=admin_username,
+            password=admin_password,
+        )
+
+        # Validate model fields before saving
+        new_org.full_clean()
+        new_admin.full_clean()
+
         new_org.save()
+        new_admin.save()
 
         return JsonResponse(
             {"message": "Organisation created successfully", "id": new_org.id},
