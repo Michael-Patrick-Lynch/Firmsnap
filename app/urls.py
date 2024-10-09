@@ -27,4 +27,6 @@ urlpatterns = [
         views.AdminDeleteComment.as_view(),
         name="admin_delete_comment",
     ),
+
+    path('admin/bulk-add-users/', views.bulk_add_users, name='org_admin_bulk_add_users'),
 ]

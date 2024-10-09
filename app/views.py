@@ -7,12 +7,13 @@ from django.db import DatabaseError
 from django.core.exceptions import ValidationError
 from django.template import loader
 from django.contrib.auth.decorators import login_required
-from app.forms import PostCreationForm, CommentCreationForm
+from app.forms import BulkUserAddForm, PostCreationForm, CommentCreationForm
 from .models import Post, Comment
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.views import LoginView
 from django.urls import reverse, reverse_lazy
 from django.views.generic import DeleteView
+from functools import wraps
 
 SHARED_SECRET = "3982hfseair2398"  # Shared between Django and Nextjs apps
 
@@ -253,3 +254,39 @@ def custom_error_view(request, status_code=500, message=None):
         },
         status=status_code,
     )
+
+# A decorator for views that only the org admin should be able to view
+def org_admin_required(view_func):
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        if request.user.is_authenticated and request.user.is_org_admin:
+            return view_func(request, *args, **kwargs)
+        return admin_access_only_template(request)  # Adjust to your access denied view or template
+    return _wrapped_view
+
+@login_required
+@org_admin_required
+def bulk_add_users(request):
+    if request.method == 'POST':
+        form = BulkUserAddForm(request.POST)
+        if form.is_valid():
+            user_data = form.cleaned_data['user_data']
+            lines = user_data.strip().split('\n')
+            users_created = []
+            for line in lines:
+                username, password = map(str.strip, line.split(','))
+
+                # Create user associated with the admin's organization
+                user = User.objects.create_user(
+                    username=username,
+                    password=password,
+                    organisation_id=request.user.organisation_id
+                )
+                users_created.append(user)
+
+            return redirect('org_admin_all_users')  # Change to the appropriate URL
+    else:
+        form = BulkUserAddForm()
+
+    return render(request, 'app/org_admin_bulk_add_users.html', {'form': form})
+    

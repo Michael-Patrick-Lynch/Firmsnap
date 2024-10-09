@@ -12,3 +12,7 @@
  - Run `$ python manage.py tailwind start` to have Tailwind assets build automatically when you change them
 
  - Run `$ python manage.py runserver` to run dev server
+
+## Notes
+
+ - If you ever see Django + Tailwind = heart show up on the screen, that means you are rendering from 'base.html' not 'app/base.html'
