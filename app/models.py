@@ -5,6 +5,7 @@ from django.contrib.auth.models import AbstractUser
 class Organisation(models.Model):
     org_name = models.CharField(max_length=200)
     seats_remaining = models.IntegerField()  # Based on their current subscription
+    seats_paid_for = models.IntegerField()
 
     def __str__(self):
         return self.org_name
