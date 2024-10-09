@@ -1,77 +1,72 @@
 {% extends 'app/base.html' %}
 
 {% block content %}
-    {% if post_obj %}
-
-    {% comment %} POST {% endcomment %}
-        <div class="card w-full bg-base-100 shadow-md mb-4">
-            <div class="card-body">
-                <div class="flex items-center mb-2">
-                    <div class="avatar">
-                        <div class="w-8 h-8 rounded-full">
-                            <img src="https://i.pravatar.cc/150?img=3" alt="User Avatar" />
-                        </div>
-                    </div>
-                    <span class="ml-2 text-sm text-gray-500">{{ post_obj.user_id.username }} • {{ post_obj.pub_date }}</span>
-                </div>
-                <h2 class="card-title">
-                    {{ post_obj.post_title }}
-                </h2>
-                <p> {{ post_obj.post_text }} </p>
-        
-                <div class="card-actions mt-4">
-                    <div class="flex space-x-2">
-                        <button class="btn btn-ghost text-gray-500 hover:text-green-500 flex items-center space-x-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 inline" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2l-6 6h4v6h4v-6h4z"/>
-                            </svg>
-                            <span class="text-xl font-bold">{{ post_obj.votes }}</span>
-                        </button>
-                    </div>
-                </div>
+  {% if post_obj %}
+    {% comment %}POST{% endcomment %}
+    <div class="card w-full bg-base-100 shadow-md mb-4">
+      <div class="card-body">
+        <div class="flex items-center mb-2">
+          <div class="avatar">
+            <div class="w-8 h-8 rounded-full">
+              <img src="https://i.pravatar.cc/150?img=3" alt="User Avatar" />
             </div>
+          </div>
+          <span class="ml-2 text-sm text-gray-500">{{ post_obj.user_id.username }} • {{ post_obj.pub_date }}</span>
         </div>
+        <h2 class="card-title">{{ post_obj.post_title }}</h2>
+        <p>{{ post_obj.post_text }}</p>
 
-    {% comment %} COMMENTS SECTION {% endcomment %}
-    <div class="flex flex-col items-center justify-center mb-4">
-    <p>Comments:</p>
-    {% for comment in list_of_comments %}
-        <div class="card w-full sm:w-6/12 bg-base-100 shadow-md mb-4">
-            <div class="card-body">
-                <div class="flex items-center mb-2">
-                    <div class="avatar">
-                        <div class="w-8 h-8 rounded-full">
-                            <img src="https://i.pravatar.cc/150?img=3" alt="User Avatar" />
-                        </div>
-                    </div>
-                    <span class="ml-2 text-sm text-gray-500">{{ comment.user_id.username }} • {{ comment.pub_date }}</span>
-                </div>
-                <h2 class="card-title">
-                    {{ comment.comment_text }}
-                </h2>
-        
-                <div class="card-actions mt-4">
-                    <div class="flex space-x-2">
-                        <button class="btn btn-ghost text-gray-500 hover:text-green-500 flex items-center space-x-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 inline" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2l-6 6h4v6h4v-6h4z"/>
-                            </svg>
-                            <span class="text-xl font-bold">{{ comment.votes }}</span>
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <div class="card-actions mt-4">
+          <div class="flex space-x-2">
+            <button class="btn btn-ghost text-gray-500 hover:text-green-500 flex items-center space-x-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 inline" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 2l-6 6h4v6h4v-6h4z" />
+              </svg>
+              <span class="text-xl font-bold">{{ post_obj.votes }}</span>
+            </button>
+          </div>
         </div>
-    {% endfor %}
+      </div>
     </div>
 
-    {% comment %} Comment Box {% endcomment %}
-    <form action="{% url 'post_detail' post_id%}" method="post">
-        {% csrf_token %}
-        {{ comment_form }}
-        <input type="submit" value="Submit">
+    {% comment %}COMMENTS SECTION{% endcomment %}
+    <div class="flex flex-col items-center justify-center mb-4">
+      <p>Comments:</p>
+      {% for comment in list_of_comments %}
+        <div class="card w-full sm:w-6/12 bg-base-100 shadow-md mb-4">
+          <div class="card-body">
+            <div class="flex items-center mb-2">
+              <div class="avatar">
+                <div class="w-8 h-8 rounded-full">
+                  <img src="https://i.pravatar.cc/150?img=3" alt="User Avatar" />
+                </div>
+              </div>
+              <span class="ml-2 text-sm text-gray-500">{{ comment.user_id.username }} • {{ comment.pub_date }}</span>
+            </div>
+            <h2 class="card-title">{{ comment.comment_text }}</h2>
+
+            <div class="card-actions mt-4">
+              <div class="flex space-x-2">
+                <button class="btn btn-ghost text-gray-500 hover:text-green-500 flex items-center space-x-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 inline" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2l-6 6h4v6h4v-6h4z" />
+                  </svg>
+                  <span class="text-xl font-bold">{{ comment.votes }}</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% comment %}Comment Box{% endcomment %}
+    <form action="{% url 'post_detail' post_id %}" method="post">
+      {% csrf_token %}
+      {{ comment_form }}
+      <input type="submit" value="Submit" />
     </form>
-    {% else %}
-        <p>Post not found</p>
-    {% endif %}
+  {% else %}
+    <p>Post not found</p>
+  {% endif %}
 {% endblock %}

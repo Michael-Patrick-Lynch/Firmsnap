@@ -1,39 +1,36 @@
 {% extends 'app/base.html' %}
 
 {% block content %}
-    <h2>Trending posts:</h2>
+  <h2>Trending posts:</h2>
 
-    {% if list_of_posts %}
-        {% for post in list_of_posts %}
-    
-        <div class="card w-full bg-base-100 shadow-md mb-4">
-            <div class="card-body">
-                <div class="flex items-center mb-2">
-                    <div class="avatar">
-                        <div class="w-8 h-8 rounded-full">
-                            <img src="https://i.pravatar.cc/150?img=3" alt="User Avatar" />
-                        </div>
-                    </div>
-                    <span class="ml-2 text-sm text-gray-500">{{ post.user_id.username }} • {{ post.pub_date }}</span>
-                </div>
-                <h2 class="card-title">
-                    <a href="{% url 'post_detail' post.id %}">{{ post.post_title }}</a>
-                </h2>
-        
-                <div class="card-actions mt-4">
-                    <div class="flex space-x-2">
-                        <button class="btn btn-ghost text-gray-500 hover:text-green-500 flex items-center space-x-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 inline" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M12 2l-6 6h4v6h4v-6h4z"/>
-                            </svg>
-                            <span class="text-xl font-bold">{{ post.votes }}</span>
-                        </button>
-                    </div>
-                </div>
+  {% if list_of_posts %}
+    {% for post in list_of_posts %}
+      <div class="card w-full bg-base-100 shadow-md mb-4">
+        <div class="card-body">
+          <div class="flex items-center mb-2">
+            <div class="avatar">
+              <div class="w-8 h-8 rounded-full">
+                <img src="https://i.pravatar.cc/150?img=3" alt="User Avatar" />
+              </div>
             </div>
+            <span class="ml-2 text-sm text-gray-500">{{ post.user_id.username }} • {{ post.pub_date }}</span>
+          </div>
+          <h2 class="card-title"><a href="{% url 'post_detail' post.id %}">{{ post.post_title }}</a></h2>
+
+          <div class="card-actions mt-4">
+            <div class="flex space-x-2">
+              <button class="btn btn-ghost text-gray-500 hover:text-green-500 flex items-center space-x-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 inline" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2l-6 6h4v6h4v-6h4z" />
+                </svg>
+                <span class="text-xl font-bold">{{ post.votes }}</span>
+              </button>
+            </div>
+          </div>
         </div>
-          {% endfor %}
-    {% else %}
-        <p>No posts found for this organization.</p>
-    {% endif %}
+      </div>
+    {% endfor %}
+  {% else %}
+    <p>No posts found for this organization.</p>
+  {% endif %}
 {% endblock %}

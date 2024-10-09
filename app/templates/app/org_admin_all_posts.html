@@ -1,13 +1,13 @@
 {% extends 'app/base.html' %}
 
 {% block content %}
-{% if all_posts %}
-        <ul>
-        {% for post in all_posts %}
-            <li>{{ post }}</li>
-        {% endfor %}
-        </ul>
-{% else %}
+  {% if all_posts %}
+    <ul>
+      {% for post in all_posts %}
+        <li>{{ post }}</li>
+      {% endfor %}
+    </ul>
+  {% else %}
     <p>No posts in your org yet</p>
-{% endif %}
+  {% endif %}
 {% endblock %}
